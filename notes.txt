@@ -1,0 +1,26 @@
+client:
+can launch local room or connect to server
+-local room for the future
+-connect to server main goal now, server loads preconfig 
+
+
+hashing:
+two asset related files: index and asset archive. index contains hashes, locations and sizes (bytes) of the respective assets in the asset archive. asset archive just has the raw bytes sitting in a row.
+hashing performed by xxhash. yaml outlining prebuilt boards/objects must specify asset hash/pash.
+
+yamls:
+scenarios defined in yamls: objects listed by name. positions and other properties (like "locked by default" for game boards, and "face-up" or "face-down") listed as well.
+objects all defined in yamls: object type and properties (dimensions, pile/stack mode, pile/stack depth, pile/stack contents, rollable, roll range) with paths provided for front/back face images. objects must have unique names.
+==============
+
+ONLY SERVER NEEDS YAMLS (and assets for distribution). CLIENTS ONLY NEED ASSETS.
+
+server loads yaml, creates entity dictionary with name, path and state info.
+
+draw order should be included in the state dictionary: it's important that a game board is on the bottom for all players when they enter. but now... we have a problem. we have a bunch of entities that we want to be indexed by ID, but we also want them sorted by drawing order. CAN set up a linked list that sorts all the entities by drawing order. it would need to be updated any time anything is picked up. maintained by server, should probably be changable locally by clients (like object position). clients are responsible for drawing entities, and for allowing users to manipulate existing entities.
+
+client joins:
+server provides client with a list of all entities in the game, their states, and the paths leading to assets for each object. (should probably just be the same entity dictionary: need to be able to index by entity ID for rapid state changes). The client should check its local machine for the required assets: if not present, the client should use a replacement texture and request the server for the relevant texture. the texture is sent over and saved on the client machine, then loaded. the placeholder texture can be replaced. The client should draw all entities
+
+============
+client should have one or more functions that implement state changes. intent is for server to informe client of state changes, and for client to manifest those changes. the client can be made to call for these changes locally for now.

@@ -1,0 +1,45 @@
+# boards.yaml
+# lists pre-set boards that can be loaded
+# 
+# every board is just a list of items with three values:
+# 
+# - example entry:
+#     - item_1:
+#         - object_name
+#         - object position x
+#         - object position y
+#     - item_2:
+#         - object_name
+#         - object position x
+#         - object position y
+
+- test_board:
+    - board:
+        - chess_board
+        - 1
+        - 1
+    - checker:
+        - checker_red
+        - 2
+        - 2
+    - checker pile:
+        - checker_pile_red
+        - 4
+        - 4
+    - meeple pile:
+        - meeple_pile_red
+        - 6
+        - 6
+    - test_die_1:
+        - text_d6
+        - 8
+        - 8
+    - test_die_2:
+        - text_d6
+        - 10
+        - 8
+    - test_die_3:
+        - text_d6
+        - 12
+        - 8
+    

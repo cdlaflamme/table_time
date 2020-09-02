@@ -1,0 +1,106 @@
+# objects.yaml
+# lists objects that can be instantiated
+# 
+# supported object types:
+#     token: generic object. 1 or two faces, can be moved.
+#     card: token, but has 2 faces and when dragged onto another card, a stack is formed.
+#     text_die: like token, has 1 face that is shown for all results, with text rendered on top
+#     image_die: like die, but has a face for every roll possible
+#     pile: a source that contains a limted or unlimited number of the same object.
+#     stack: a source that contains a fixed number of entities in a certain order.
+#
+# - example_object: #contains all valid fields, as if it were all types. a real object should not do this.
+#     width: 2.5 #width of object bounding box in inches. for everything except stacks/piles.
+#     height: 3.5 #height of object bounding box in inches for everything except stacks/piles.
+#     type: [token, card, text_die, image_die, stack, pile]
+#     front_face: "path to front face image"    #should be given for tokens, cards, and image_dice
+#     back_face: "path to back face image"      # should be given for cards. optional for tokens (if omitted, will be same as front face)
+#     text_rolls:        #for text_die. list of rolls possible, as strings. to be rendered as text
+#         - 1
+#         - 2
+#         - 3
+#     face_rolls:       #for image die. list of face images for all faces.
+#         - "path to image for face 1"
+#         - "path to image for face 2"
+#         - "path to image for face 3"
+#     stack_contents:     #list of initial contents for a stack. entries are object names, as defined in this file.
+#         - test_card_1
+#         - test_card_2
+#         - test_card_3
+#     pile_contents: d6     #for piles. name of object that this pile contains
+#     pile_count: -1        #for piles. remaining objects in pile. -1 if unlimited. 
+
+- meeple_red:
+    type: token
+    width: 1
+    height: 1
+    front_face: meeple_red
+
+- checker_red:
+    type: token
+    width: 1
+    height: 1
+    front_face: checker_red
+    back_face: checker_red_king
+
+- chess_board:
+    type: token
+    width: 12
+    height: 12
+    front_face: chess_board
+    
+- text_d6:
+    type: text_die
+    width: 0.5
+    height: 0.5
+    text_rolls:
+        - 1
+        - 2
+        - 3
+        - 4
+        - 5
+        - 6
+    
+- test_card_1:
+    width: 2.5
+    height: 3.5
+    type: card
+    front_face: card_1
+    back_face: pokemon_card_back
+
+- test_card_2:
+    width: 2.5
+    height: 3.5
+    type: card
+    front_face: card_2
+    back_face: pokemon_card_back
+
+- test_card_3:
+    width: 2.5
+    height: 3.5
+    type: card
+    front_face: card_3
+    back_face: pokemon_card_back
+
+- test_stack:
+    type: stack
+    stack_contents:
+        - test_card_1
+        - test_card_1
+        - test_card_1
+        - test_card_2
+        - test_card_2
+        - test_card_2
+        - test_card_3
+        - test_card_3
+        - test_card_3
+
+- meeple_pile_red:
+    type: pile
+    pile_contents: meeple_red
+    pile_count: -1
+    
+- checker_pile_red:
+    type: pile
+    pile_contents: checker_red
+    pile_count: 12
