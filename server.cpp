@@ -78,7 +78,7 @@ int main(int argc, char* argv[]){
 	WSADATA wsaData;
 	int iResult = WSAStartup(MAKEWORD(2,2), &wsaData);
 	if (iResult != 0){
-		std::cout << "Windows socket library WSAStartup failed, code " << iResult << "\n";
+		std::cout << "Windows socket library WSAStartup failed, Code: "<< WSAGetLastError() << std::endl;
 		return 1;
 	}
 	
@@ -94,7 +94,7 @@ int main(int argc, char* argv[]){
 	
 	iResult = getaddrinfo(NULL, PORT, &hints, &result);
 	if (iResult != 0){
-		std::cout << "getaddrinfo failed. code " << iResult << "\n";
+		std::cout << "getaddrinfo failed. Code: "<< WSAGetLastError() << std::endl;
 		WSACleanup();
 		return 1;
 	}
@@ -103,7 +103,7 @@ int main(int argc, char* argv[]){
 	SOCKET listenerSocket = INVALID_SOCKET;
 	listenerSocket = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
 	if (listenerSocket == INVALID_SOCKET){
-		std::cout << "Error creating socket.\n";
+		std::cout << "Error creating socket. Code: "<< WSAGetLastError() << std::endl;
 		freeaddrinfo(result);
 		WSACleanup();
 		return 1;
@@ -112,7 +112,7 @@ int main(int argc, char* argv[]){
 	//bind listener socket to port
 	iResult = bind(listenerSocket, result->ai_addr, (int)result->ai_addrlen);
 	if (iResult == SOCKET_ERROR){
-		std::cout << "Error: Could not bind to port!\n";
+		std::cout << "Error: Could not bind to port! Code: "<< WSAGetLastError() << std::endl;
 		freeaddrinfo(result);
 		closesocket(listenerSocket);
 		WSACleanup();
@@ -141,22 +141,7 @@ int main(int argc, char* argv[]){
 	
 	WSAPOLLFD clientPollFD;
 	clientPollFD.fd = INVALID_SOCKET;
-	clientPollFD.events = POLLRDNORM;
-	
-	
-	SOCKET newClientSocket = accept(listenerSocket, NULL, NULL);
-	if (newClientSocket == INVALID_SOCKET){
-		std::cerr << WSAGetLastError() << std::endl;
-	}
-	
-	std::cout << "Accepting new client. ID: " << nextID << "\n";
-	Client newClient;
-	newClient.csock = newClientSocket;
-	newClient.cid = nextID++;
-	newClient.active = true;
-	clientList.push_back(newClient);
-	
-	
+	clientPollFD.events = POLLRDNORM;	
 	
 	//====================== MAIN LOOP ====================	
 	while (!SHOULD_EXIT){

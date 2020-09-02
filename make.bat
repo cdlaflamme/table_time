@@ -1,1 +1,2 @@
-g++ client.cpp -o client_win_test.exe -DSFML_STATIC -I C:\mingw64\usr\SFML-2.5.0\include\  -lws2_32 -lmswsock -ladvapi32 -L C:\mingw64\usr\SFML-2.5.0\lib\ -lsfml-graphics-s -lsfml-window-s -lsfml-audio-s -lsfml-system-s -lwinmm -lgdi32 -lopengl32 -lfreetype -lopenal32 -lflac -lvorbisenc -lvorbisfile -lvorbis -logg
+call make_client.bat
+call make_server.bat

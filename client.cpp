@@ -97,7 +97,7 @@ int main(int argc, char *argv[]){
 	WSADATA wsaData;
 	int iResult = WSAStartup(MAKEWORD(2,2), &wsaData);
 	if (iResult != 0){
-		std::cout << "Windows socket library WSAStartup failed, code " << iResult << "\n";
+		std::cout << "Windows socket library WSAStartup failed,  Code: "<< WSAGetLastError() << std::endl;
 		return 1;
 	}
 	std::cout << "WSA Startup successful.\n";
@@ -113,7 +113,7 @@ int main(int argc, char *argv[]){
 	
 	iResult = getaddrinfo(host_address, PORT, &hints, &result);
 	if (iResult != 0) {
-		std::cout << "Windows getaddrinfo failed, code " << iResult << "\n";
+		std::cout << "Windows getaddrinfo failed, Code: "<< WSAGetLastError() << std::endl;
 		WSACleanup();
 		return 1;
 	}
@@ -123,7 +123,7 @@ int main(int argc, char *argv[]){
 	clientSocket = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
 	
 	if (clientSocket == INVALID_SOCKET) {
-		std::cout << "Windows created invalid socket. Was probably given an invalid IP/port.\n";
+		std::cout << "Windows created invalid socket. Was probably given an invalid IP/port. Code: "<< WSAGetLastError() << std::endl;
 		freeaddrinfo(result);
 		WSACleanup();
 		return 1;
@@ -133,7 +133,7 @@ int main(int argc, char *argv[]){
 	//connect to foreign address
 	iResult = connect(clientSocket, result->ai_addr, (int)result->ai_addrlen);
 	if (iResult == SOCKET_ERROR) {
-		std::cout << "Unable to connect to server. :(\n";
+		std::cout << "Unable to connect to server. :( Code: "<< WSAGetLastError() << std::endl;
 		closesocket(clientSocket);
 		clientSocket = INVALID_SOCKET;
 		WSACleanup();
@@ -142,7 +142,7 @@ int main(int argc, char *argv[]){
 	
 	freeaddrinfo(result);
 	if (clientSocket == INVALID_SOCKET){
-		std::cout << "Client socket suddenly invalid.\n";
+		std::cout << "Client socket suddenly invalid. Code: "<< WSAGetLastError() << std::endl;
 		WSACleanup();
 		return 1;
 	}
@@ -199,14 +199,14 @@ int main(int argc, char *argv[]){
 		//poll server: if bytes available, read them
 		iResult = WSAPoll(&pollFD, 1, 0); //poll socket to check if readable. arguments: array of WSAPOLLFD, len of array, timeout (s)
 		if (iResult == SOCKET_ERROR || (iResult !=0 && pollFD.revents & POLLERR)){
-			std::cout << "Error polling socket.\n";
+			std::cout << "Error polling socket. Code: "<< WSAGetLastError() << std::endl;
 			closesocket(clientSocket);
 			WSACleanup();
 			return 1;
 		}
 		if (iResult != 0 && pollFD.revents & POLLHUP){
 			//we got hung up on. :(
-			std::cout << "Server unexpectedly closed connection.\n";
+			std::cout << "Server unexpectedly closed connection. Code: "<< WSAGetLastError() << std::endl;
 			closesocket(clientSocket);
 			WSACleanup();
 			return 1;
